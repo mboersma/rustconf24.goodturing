@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Line Counter</title>
+</head>
+<body>
+    <h1>Line Counter</h1>
+    <input type="file" id="fileInput" />
+    <p id="lineCount">Lines in file: </p>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const content = e.target.result;
+                    const lines = content.split(/\r\n|\n/).length;
+                    document.getElementById('lineCount').textContent = `Lines in file: ${lines}`;
+                };
+
+                reader.readAsText(file);
+            } else {
+                document.getElementById('lineCount').textContent = 'Lines in file: ';
+            }
+        });
+    </script>
+</body>
+</html>
