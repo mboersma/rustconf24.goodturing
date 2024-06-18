@@ -45,7 +45,7 @@ fn main() {
     let (singleton_count_even, only_odd_count) = good_turning(&file_name).unwrap();
 
     println!(
-        "Prediction (Words that appear exactly once on even lines): {}",
+        "Prediction (words that appear exactly once on even lines): {}",
         singleton_count_even
     );
     println!(
