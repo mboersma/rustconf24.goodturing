@@ -2,20 +2,20 @@ use std::{
     collections::{HashMap, HashSet},
     env,
     fs::File,
-    io::{BufRead, BufReader},
+    io::{self, BufRead, BufReader},
 };
 
 use lazy_regex::regex;
 
-fn good_turning(file_name: &str) -> (usize, usize) {
-    let reader = BufReader::new(File::open(file_name).expect("could not open file"));
+fn good_turning(file_name: &str) -> Result<(usize, usize), io::Error> {
+    let reader = BufReader::new(File::open(file_name)?);
 
     let re = regex!(r"\b\w+\b");
     let mut word_to_count_even = HashMap::new();
     let mut word_set_odd = HashSet::new();
 
     for (index, line) in reader.lines().enumerate() {
-        let line = line.expect("could not read line");
+        let line = line?;
         // split into words with regex
         for word in re.find_iter(&line) {
             let word = word.as_str();
@@ -38,11 +38,11 @@ fn good_turning(file_name: &str) -> (usize, usize) {
         .filter(|word| !word_to_count_even.contains_key(word))
         .count();
 
-    (singleton_count_even, only_odd_count)
+    Ok((singleton_count_even, only_odd_count))
 }
 fn main() {
     let file_name = env::args().nth(1).expect("no file name given");
-    let (singleton_count_even, only_odd_count) = good_turning(&file_name);
+    let (singleton_count_even, only_odd_count) = good_turning(&file_name).unwrap();
 
     println!(
         "Prediction (Words that appear exactly once on even lines): {}",
@@ -61,7 +61,7 @@ mod tests {
 
     #[test]
     fn test_process_file() {
-        let (prediction, actual) = good_turning("./pg100.txt");
+        let (prediction, actual) = good_turning("./pg100.txt").unwrap();
         assert_eq!(prediction, 10223);
         assert_eq!(actual, 7967);
     }
