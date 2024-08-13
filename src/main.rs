@@ -7,7 +7,7 @@ use std::{
 
 use lazy_regex::regex;
 
-fn good_turning(file_name: &str) -> Result<(usize, usize), io::Error> {
+fn good_turing(file_name: &str) -> Result<(u32, u32), io::Error> {
     let reader = BufReader::new(File::open(file_name)?);
 
     let re = regex!(r"\b\w+\b");
@@ -32,17 +32,18 @@ fn good_turning(file_name: &str) -> Result<(usize, usize), io::Error> {
     let singleton_count_even = word_to_count_even
         .iter()
         .filter(|(_, &count)| count == 1)
-        .count();
+        .count() as u32;
     let only_odd_count = word_set_odd
         .into_iter()
         .filter(|word| !word_to_count_even.contains_key(word))
-        .count();
+        .count() as u32;
 
     Ok((singleton_count_even, only_odd_count))
 }
+
 fn main() {
     let file_name = env::args().nth(1).expect("no file name given");
-    let (singleton_count_even, only_odd_count) = good_turning(&file_name).unwrap();
+    let (singleton_count_even, only_odd_count) = good_turing(&file_name).unwrap();
 
     println!(
         "Prediction (words that appear exactly once on even lines): {}",
@@ -61,7 +62,7 @@ mod tests {
 
     #[test]
     fn test_process_file() {
-        let (prediction, actual) = good_turning("./pg100.txt").unwrap();
+        let (prediction, actual) = good_turing("./pg100.txt").unwrap();
         assert_eq!(prediction, 10223);
         assert_eq!(actual, 7967);
     }
