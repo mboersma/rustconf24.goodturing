@@ -11,21 +11,19 @@
     <p id="lineCount">Lines in file: </p>
 
     <script>
-        document.getElementById('fileInput').addEventListener('change', function(event) {
+        const output = document.getElementById('lineCount');
+        document.getElementById('fileInput').addEventListener('change', (event) => {
             const file = event.target.files[0];
-            if (file) { // If a file was selected
-                const reader = new FileReader();
-                // What to do when the file is full read
-                reader.onload = function(e) {
-                    const content = e.target.result;
-                    const lines = content.split(/\r\n|\n/).length;
-                    document.getElementById('lineCount').textContent = `Lines in file: ${lines}`;
-                };
-                // Now start to read the file as text
-                reader.readAsText(file);
-            } else {
-                document.getElementById('lineCount').textContent = 'Lines in file: ';
-            }
+            if (!file) { output.innerHTML = ''; return } // No file selected
+            const reader = new FileReader();
+            // When the file is fully read
+            reader.onload = async (e) => {                
+                const content = e.target.result;
+                const lines = content.split(/\r\n|\n/).length;
+                output.textContent = `Lines in file: ${lines}`;
+            };
+            // Now start to read the file as text
+            reader.readAsText(file);
         });
     </script>
 </body>
