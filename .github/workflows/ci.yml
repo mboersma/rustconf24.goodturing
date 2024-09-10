@@ -70,5 +70,3 @@ jobs:
         run: |
           rustup target add wasm32-unknown-unknown
           wasm-pack test --chrome --headless
-
-            runs-on: ubuntu-latest
